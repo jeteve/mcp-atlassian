@@ -112,12 +112,17 @@ class ResourceTracker:
 @pytest.fixture
 def jira_config() -> JiraConfig:
     """Create a JiraConfig from environment variables."""
+    if os.environ.get("JIRA_URL") is None:
+        pytest.skip("JIRA_URL environment variable not set")
+
     return JiraConfig.from_env()
 
 
 @pytest.fixture
 def confluence_config() -> ConfluenceConfig:
     """Create a ConfluenceConfig from environment variables."""
+    if os.environ.get("CONFLUENCE_URL") is None:
+        pytest.skip("CONFLUENCE_URL environment variable not set")
     return ConfluenceConfig.from_env()
 
 

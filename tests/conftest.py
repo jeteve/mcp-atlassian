@@ -2,6 +2,8 @@
 Root pytest configuration file for MCP Atlassian tests.
 """
 
+import os
+
 import pytest
 
 
@@ -21,8 +23,9 @@ def use_real_jira_data(request):
     Check if real Jira data tests should be run.
 
     This will be True if the --use-real-data flag is passed to pytest.
+    and the environment variables are set.
     """
-    return request.config.getoption("--use-real-data")
+    return request.config.getoption("--use-real-data") and os.environ.get("JIRA_URL")
 
 
 @pytest.fixture
@@ -32,4 +35,6 @@ def use_real_confluence_data(request):
 
     This will be True if the --use-real-data flag is passed to pytest.
     """
-    return request.config.getoption("--use-real-data")
+    return request.config.getoption("--use-real-data") and os.environ.get(
+        "CONFLUENCE_URL"
+    )

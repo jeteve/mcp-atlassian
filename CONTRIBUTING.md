@@ -66,6 +66,45 @@ pre-commit run --all-files
 
 7. Submit a pull request to the main branch
 
+## Testing against confluence with docker compose from inside a devcontainer (VSCode)
+
+You will need `docker compose`.
+
+1. Bring docker compose up. This contains a running instance of confluence:
+
+```bash
+docker compose up
+```
+
+2. Go to http://localhost:8090/ and complete the setup (in single node mode). You might need
+to sign up to confluence and get a trial key.
+
+2.1 If you run into docker (in a devcontainer for instance), find the name of your running
+container and connect to the compose network:
+
+```bash
+docker network connect mcp-atlassian_test-compose  $(head -1 /proc/self/cgroup|cut -d/ -f3)
+```
+
+you can then access confluence at the following URL from inside your devcontainer: http://confluence:8090/
+
+3. Make sure the following environment variables are set in your console:
+
+```bash
+# Adapt the value to your installation
+CONFLUENCE_TEST_PAGE_ID=163926
+CONFLUENCE_API_TOKEN=admin
+CONFLUENCE_USERNAME=admin
+CONFLUENCE_URL=http://confluence:8090
+```
+
+Then you can run:
+
+```bash
+pytest -vx tests/test_real_api_validation.py --use-real-data
+```
+
+
 ## Code Style
 
 - We use pre-commit hooks to enforce code quality
