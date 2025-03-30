@@ -1,7 +1,11 @@
 services:
   confluence:
     # See https://hub.docker.com/r/atlassian/confluence
-    image: atlassian/confluence:9.1.0
+    build:
+      context: test_images/confluence
+      dockerfile: Dockerfile
+      args:
+        CONFLUENCE_VERSION: ${COMPOSE_CONFLUENCE_VERSION}
     ports:
       - "8090:8090"
       - "8091:8091"
@@ -12,6 +16,8 @@ services:
       - ATL_JDBC_PASSWORD=confluence
     volumes:
       - confluence-home:/var/atlassian/application-data/confluence
+      # For legacy confluence:
+      - confluence-shared:/var/atlassian/shared/confluence
     depends_on:
       postgresql:
         condition: service_started
@@ -24,6 +30,10 @@ services:
       POSTGRES_USER: confluence
       POSTGRES_PASSWORD: confluence
       POSTGRES_DB: confluence
+      # For legacy confluence with old Postgres drivers:
+      # See https://stackoverflow.com/questions/64210167/unable-to-connect-to-postgres-db-due-to-the-authentication-type-10-is-not-suppor
+      POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_INITDB_ARGS: "--auth-host=md5"
     volumes:
       - confluence-postgres-data:/var/lib/postgresql/data
     networks:
@@ -31,6 +41,7 @@ services:
 
 volumes:
   confluence-home:
+  confluence-shared:
   confluence-postgres-data:
 
 

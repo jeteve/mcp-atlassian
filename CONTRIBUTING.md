@@ -66,9 +66,7 @@ pre-commit run --all-files
 
 7. Submit a pull request to the main branch
 
-## Testing against confluence with docker compose from inside a devcontainer (VSCode)
-
-You will need `docker compose`.
+## Testing against docker compose confluence inside a Devcontainer
 
 1. Bring docker compose up. This contains a running instance of confluence:
 
@@ -103,6 +101,16 @@ Then you can run:
 ```bash
 pytest -vx tests/test_real_api_validation.py --use-real-data
 ```
+
+Clearing the confluence data set and changing confluence version:
+
+```
+docker compose down -v
+export COMPOSE_CONFLUENCE_VERSION=6.0.1
+docker compose up
+```
+
+And run the test like above.
 
 
 ## Code Style
